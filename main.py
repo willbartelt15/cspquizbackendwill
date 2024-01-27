@@ -8,6 +8,7 @@ from flask.cli import AppGroup
 # import "packages" from "this" project
 from __init__ import app, db, cors  # Definitions initialization
 
+from aws_commands import run_aws_command  # Import the function
 
 # setup APIs
 from api.covid import covid_api # Blueprint import api definition
@@ -20,6 +21,8 @@ from model.players import initPlayers
 
 # setup App pages
 from projects.projects import app_projects # Blueprint directory import projects definition
+
+from flask import request, jsonify
 
 
 # Initialize the SQLAlchemy object to work with the Flask app instance
@@ -44,6 +47,22 @@ def index():
 @app.route('/table/')  # connects /stub/ URL to stub() function
 def table():
     return render_template("table.html")
+
+@app.route('/run-aws-command')
+def aws_command_route():
+    try:
+        # Retrieve query parameters
+        instance = request.args.get('instance')
+        mycommand = request.args.get('mycommand')
+
+        # Ensure both parameters are provided
+        if not instance or not mycommand:
+            return jsonify({'error': 'Missing instance or command parameter'}), 400
+
+        output = run_aws_command(instance, mycommand)
+        return jsonify({'output': output})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.before_request
 def before_request():
