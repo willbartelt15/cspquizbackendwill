@@ -22,3 +22,11 @@ def run_aws_command(instance, mycommand):
         InstanceId=instance_id
     )
     return output['StandardOutputContent']
+
+def get_ec2_instance_info():
+    region_name = 'us-east-2'  # Specify your region
+    ec2 = boto3.client('ec2', region_name=region_name)
+
+    # Retrieve information about all EC2 instances
+    response = ec2.describe_instances()
+    return response

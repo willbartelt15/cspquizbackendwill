@@ -9,6 +9,7 @@ from flask.cli import AppGroup
 from __init__ import app, db, cors  # Definitions initialization
 
 from aws_commands import run_aws_command  # Import the function
+from aws_commands import get_ec2_instance_info
 
 # setup APIs
 from api.covid import covid_api # Blueprint import api definition
@@ -24,6 +25,12 @@ from projects.projects import app_projects # Blueprint directory import projects
 
 from flask import request, jsonify
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
 
 # Initialize the SQLAlchemy object to work with the Flask app instance
 db.init_app(app)
@@ -61,6 +68,14 @@ def aws_command_route():
 
         output = run_aws_command(instance, mycommand)
         return jsonify({'output': output})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/get-ec2-instances')
+def ec2_instances_route():
+    try:
+        instances_info = get_ec2_instance_info()
+        return jsonify(instances_info)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
