@@ -32,6 +32,9 @@ load_dotenv()
 aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
 
+from flask_cors import CORS
+CORS(app)
+
 # Initialize the SQLAlchemy object to work with the Flask app instance
 db.init_app(app)
 
@@ -79,12 +82,12 @@ def ec2_instances_route():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.before_request
-def before_request():
-    # Check if the request came from a specific origin
-    allowed_origin = request.headers.get('Origin')
-    if allowed_origin in ['http://localhost:4100', 'http://127.0.0.1:4100', 'https://nighthawkcoders.github.io', '*']:
-        cors._origins = allowed_origin
+#@app.before_request
+#def before_request():
+#    # Check if the request came from a specific origin
+ #   allowed_origin = request.headers.get('Origin')
+ #   if allowed_origin in ['*']:
+ #       cors._origins = allowed_origin
 
 # Create an AppGroup for custom commands
 custom_cli = AppGroup('custom', help='Custom commands')
