@@ -82,7 +82,7 @@ def ec2_instances_route():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-#@app.before_request
+@app.before_request
 def before_request():
     # Check if the request came from a specific origin
     allowed_origin = request.headers.get('Origin')
