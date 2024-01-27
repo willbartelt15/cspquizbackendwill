@@ -10,4 +10,3 @@ Flask_Cors
 PyJWT
 python-dotenv
 boto3
-os-sys
