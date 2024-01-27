@@ -8,6 +8,5 @@ Flask_Migrate
 Flask_Restful
 Flask_Cors
 PyJWT
-os
 dotenv
 boto3
