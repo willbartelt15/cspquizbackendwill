@@ -77,7 +77,7 @@ def ec2_instances_route():
     try:
         instances_info = get_ec2_instance_info()
         response = jsonify(instances_info)
-        response.headers.add('Access-Control-Allow-Origin', '*')
+        # response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     except Exception as e:
         return jsonify({'error': str(e)}), 500
