@@ -8,9 +8,6 @@ from flask.cli import AppGroup
 # import "packages" from "this" project
 from __init__ import app, db  # Definitions initialization
 
-from aws_commands import run_aws_command  # Import the function
-from aws_commands import get_ec2_instance_info
-
 # setup APIs
 from api.covid import covid_api # Blueprint import api definition
 from api.joke import joke_api # Blueprint import api definition
@@ -56,31 +53,6 @@ def index():
 def table():
     return render_template("table.html")
 
-@app.route('/run-aws-command')
-def aws_command_route():
-    try:
-        # Retrieve query parameters
-        instance = request.args.get('instance')
-        mycommand = request.args.get('mycommand')
-
-        # Ensure both parameters are provided
-        if not instance or not mycommand:
-            return jsonify({'error': 'Missing instance or command parameter'}), 400
-
-        output = run_aws_command(instance, mycommand)
-        return jsonify({'output': output})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/get-ec2-instances')
-def ec2_instances_route():
-    try:
-        instances_info = get_ec2_instance_info()
-        response = jsonify(instances_info)
-        # response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 # Create an AppGroup for custom commands
 custom_cli = AppGroup('custom', help='Custom commands')
@@ -94,15 +66,9 @@ def generate_data():
 # Register the custom command group with the Flask application
 app.cli.add_command(custom_cli)
         
-# this runs the application on the development server
-#if __name__ == "__main__":
-    # change name for testing
-    #from flask_cors import CORS
-    #cors = CORS(app)
-    #app.run(debug=True, host="0.0.0.0", port="8086")
 
 if __name__ == "__main__":
     # change name for testing
     from flask_cors import CORS
     cors = CORS(app)
-    app.run(debug=True, host="0.0.0.0", port="8086")
+    app.run(debug=True, host="0.0.0.0", port="----")
